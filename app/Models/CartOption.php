@@ -10,4 +10,6 @@ class CartOption extends Model
     use HasFactory;
     protected $fillable = ['cart_id','product_option_value_id'];
 
+
+
 }

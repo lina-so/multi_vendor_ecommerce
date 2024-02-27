@@ -37,7 +37,7 @@
                         <tbody>
 
                             @foreach ($carts as $cart)
-                                <tr>
+                                <tr id="{{ $cart->id }}">
 
                                     <td>
                                         <div class="media" id="{{ $cart->id }}">
@@ -48,28 +48,20 @@
                                             <div class="media-body">
                                                 <h5>{{ $cart->product->slug }}</h5>
 
-                                                @php $renderedOptions = []; @endphp
+                                                @php
+                                                    $options = json_decode($cart->options, true);
+                                                @endphp
 
-                                                @foreach ($cart->options as $option)
-                                                    @if (!in_array($option->option->id, $renderedOptions))
-                                                        <h6>
-                                                            <span>{{ $option->option->name }} :</span>
-                                                            <span>
-                                                                @foreach ($cart->options->where('option_id', $option->option->id)->unique('option_value_id') as $nestedOption)
-                                                                    {{ $nestedOption->optionValue->name }}
+                                                @foreach ($options as $optionId => $ValueId)
+                                                    @php
+                                                        $optionName = isset($optionNames[$optionId]) ? $optionNames[$optionId] : 'Unknown Option';
+                                                        $optionValue = isset($optionValues[$ValueId]) ? $optionValues[$ValueId] : 'Unknown OptionValue';
 
-                                                                    @if (!$loop->last)
-                                                                        ,
-                                                                        <!-- Add a comma if it's not the last value -->
-                                                                    @endif
-                                                                @endforeach
-                                                            </span>
-                                                        </h6>
-                                                        @php $renderedOptions[] = $option->option->id; @endphp
-                                                    @endif
+                                                    @endphp
+                                                    <h6>
+                                                        {{ $optionName }}: {{ $optionValue }}
+                                                    </h6>
                                                 @endforeach
-
-
 
                                             </div>
                                         </div>
@@ -80,8 +72,9 @@
                                     <td>
                                         <div class="product_count">
 
-                                            <input class="input-number" type="number" value="{{ $cart->quantity }}"
-                                                min="0" max="10">
+                                            <input class="input-number quantityInput" type="number" value="{{ $cart->quantity }}"
+                                                min="0" max="10" id="quantityInput{{ $cart->id }}"
+                                                data-id="{{ $cart->id }}" name="quantity">
                                         </div>
                                     </td>
                                     <td>
@@ -181,6 +174,35 @@
 
             $('#confirmDeleteModal').on('hidden.bs.modal', function() {
                 $('#confirmDeleteModal').removeData('bs.modal');
+            });
+        </script>
+
+        <script>
+            $(document).ready(function() {
+
+                $('.quantityInput').on('change', function() {
+                    var newQuantity = $(this).val();
+                    // var cartId = $('.quantityInput').data('id');
+                    var cartId = $(this).data('id');
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '/cart/update/' + cartId,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: {
+                            quantity: newQuantity,
+                            // _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            console.log(response);
+                        },
+                        error: function(error) {
+                            console.log(error);
+                        }
+                    });
+                });
             });
         </script>
     @endpush

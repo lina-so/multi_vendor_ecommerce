@@ -74,6 +74,7 @@ class ProductController extends Controller
     {
         $product = Product::with('options','images','optionValues','brand')->findOrFail($id);
         $optionsWithValues = $product->productOptionValues->groupBy('option.name');
+        // dd($optionsWithValues);
         return view('layouts.front.sections.product-details',compact('product','optionsWithValues'));
     }
 

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Front\Cart;
 
+use App\Models\Option;
+use App\Models\OptionValue;
 use Illuminate\Http\Request;
 use App\Services\CartService;
 use App\Services\SoftDeleteService;
@@ -23,8 +25,10 @@ class CartController extends Controller
     public function index()
     {
         $carts = $this->cartService->get();
+        $optionNames = Option::pluck('name', 'id');
+        $optionValues = OptionValue::pluck('name', 'id');
 
-        return view('layouts.front.sections.cart',compact('carts'));
+        return view('layouts.front.sections.cart',compact('carts','optionNames','optionValues'));
 
     }
     /*****************************************************************************************************/
@@ -38,6 +42,7 @@ class CartController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request);
         $cart = $this->cartService->add($request);
         // dd($cart);
         return redirect()->back()->with('success','Product add to cart successfully');
@@ -58,9 +63,15 @@ class CartController extends Controller
     }
     /*****************************************************************************************************/
 
-    public function update(Request $request, string $id)
+    public function update($cartId, Request $request)
     {
-        //
+        $this->cartService->update($cartId, $request);
+
+        if ($request->ajax()) {
+            return response()->json(['success' => true]);
+        } else {
+            return redirect()->back()->with('success', 'quantity updated successfully');
+        }
     }
 
     /*****************************************************************************************************/

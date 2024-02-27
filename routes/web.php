@@ -25,8 +25,10 @@ Route::get('/', function () {
 // Route::get('user/profile',[ProfileController::class,'index'])->middleware(['auth','verified']);
 Route::get('user/profile',[ProfileController::class,'index'])->middleware(['auth:web','verified']);
 
-Route::resource('cart', CartController::class)->except(['destroy']);
+Route::resource('cart', CartController::class)->except(['destroy','update']);
 Route::delete('/cart/remove/{id}',  [CartController::class,'destroy'])->name('cart.remove');
+Route::post('/cart/update/{id}',  [CartController::class,'update'])->name('cart.update');
+
 
 
 Route::get('product-details/{id}', [ProductController::class,'show'])->name('product-details');

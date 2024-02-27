@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Option;
 use App\Models\CartOption;
 use App\Models\OptionValue;
 use Illuminate\Support\Str;
@@ -40,10 +41,21 @@ class Cart extends Model
         return $this->belongsTo(Product::class);
     }
 
+    public function option()
+    {
+        return $this->belongsTo(Option::class);
+    }
+
+    public function optionValue()
+    {
+        return $this->belongsTo(OptionValue::class);
+    }
+
     public function options()
     {
-        return $this->belongsToMany(ProductOptionValue::class, 'cart_options', 'cart_id', 'product_option_value_id');
+        return $this->belongsToMany(Option::class, 'cart_options', 'cart_id', 'product_option_value_id');
     }
+
 
     public function cartOption()
     {

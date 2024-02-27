@@ -23,71 +23,63 @@ class CartService
     }
 
 /********************************************************************************************/
+
 public function add(Request $request)
 {
     DB::beginTransaction();
+
     try {
-        $cart = Cart::where('product_id', $request->product_id)
-            ->where('cookie_id', $this->getCookieId())
+        $user_id = Auth::id();
+        $cookie_id = $this->getCookieId();
+        $product_id = $request->product_id;
+        $quantity = $request->quantity;
+        $options = [];
+
+        foreach ($request->selected_options as $option_id => $option_values) {
+            foreach ($option_values as $option_value) {
+                // إضافة لون وحجم إلى المصفوفة
+                $options[$option_id] = $option_value;
+            }
+        }
+
+        // تحويل المصفوفة إلى تنسيق JSON
+        $options_json = json_encode($options);
+
+        $cart = Cart::where('product_id', $product_id)
+            ->where('cookie_id', $cookie_id)
+            ->where('options', $options_json)
+            ->where('user_id', $user_id)
             ->first();
 
-        // إذا كانت السلة غير موجودة، قم بإنشاء سلة جديدة
         if (!$cart) {
             $cart = Cart::create([
-                'cookie_id' => $this->getCookieId(),
-                'user_id' => Auth::id(),
-                'product_id' => $request->product_id,
-                'quantity' => 0, // Set initial quantity to 0
+                'cookie_id' => $cookie_id,
+                'user_id' => $user_id,
+                'product_id' => $product_id,
+                'quantity' => $quantity,
+                'options' => $options_json,
             ]);
-        }
-
-        $selectedOptions = $request->input('selected_options', []);
-        $selectedOptionValues = [];
-
-        // Build an array of selected option values
-        foreach ($selectedOptions as $optionId => $values) {
-            foreach ($values as $value) {
-                $selectedOptionValues[] = $value;
-            }
-        }
-
-        // Check if the same set of options already exists in the cart
-        $cartOptionValues = $cartOptions->options->pluck('option_value_id', 'option_id')->toArray();
-
-        sort($existingOptions);
-        sort($selectedOptionValues);
-
-        if ($existingOptions == $selectedOptionValues) {
-            // The same set of options already exists, update the quantity
-            $cart->increment('quantity', $request->quantity);
         } else {
-            // Different set of options, create a new cart entry
-            $cart = Cart::create([
-                'cookie_id' => $this->getCookieId(),
-                'user_id' => Auth::id(),
-                'product_id' => $request->product_id,
-                'quantity' => $request->quantity,
-            ]);
-
-            // Attach options to the new cart
-            foreach ($selectedOptions as $optionId => $values) {
-                $cart->options()->attach($values);
-            }
+            $cart->increment('quantity', $quantity);
         }
 
+        // dd($cart);
         DB::commit();
-        return $cart;
+        return response()->json(['success' => true]);
     } catch (\Exception $e) {
         DB::rollback();
-        return $e->getMessage();
+        return response()->json(['error' => $e->getMessage()], 500);
     }
 }
 
 
 /********************************************************************************************/
     public function update($id,$request){
-        // dd($this->getCookieId());
-        // Cart::where('product_id','=',$product->id)
+        // dd($request);
+        $quantity = $request->input('quantity');
+        $cart = Cart::find($id);
+        $cart->update([ 'quantity'=>$quantity]);
+        // Cart::where('id','=',$id)
         // ->where('cookie_id','=',$this->getCookieId())
         // ->update([
         //     'quantity'=>$quantity,
@@ -96,10 +88,6 @@ public function add(Request $request)
 /********************************************************************************************/
 
     public function delete($cartId , $request){
-        // Cart::where('product_id','=',$request->product_id)
-        // ->where('cookie_id','=',$this->getCookieId())
-        // ->where('quantity','=',$request->quantity)
-        // ->delete();
         Cart::where('id', '=', $cartId)->delete();
         return response()->json(['success' => true]);
     }

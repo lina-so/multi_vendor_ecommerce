@@ -27,7 +27,7 @@ class StoreCartRequest extends FormRequest
             'product_id'=>['required','integer','exists:products,id' , new QuantityRule($this->getProductQuantity())],
             'quantity'=>['required','numeric','min:1'],
             'selected_options' => 'required|array',
-            // 'selected_options.*' => 'required|exists:option_values,id',
+            'selected_options.*.*' => 'required|exists:option_values,id',
 
 
         ];

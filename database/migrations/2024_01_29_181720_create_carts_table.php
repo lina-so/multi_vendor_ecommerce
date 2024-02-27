@@ -1,7 +1,9 @@
 <?php
 
 use App\Models\User;
+use App\Models\Option;
 use App\Models\Product;
+use App\Models\OptionValue;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -18,6 +20,7 @@ return new class extends Migration
             $table->uuid('cookie_id');
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignIdFor(Product::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->json('options')->nullable();
             $table->unsignedSmallInteger('quantity')->default(1);
             $table->timestamps();
         });

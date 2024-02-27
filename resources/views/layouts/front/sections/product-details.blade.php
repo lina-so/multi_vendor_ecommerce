@@ -79,12 +79,14 @@
                                 <div class="form-group">
                                     @foreach ($optionsWithValues as $option_name => $values)
                                         <label>Select {{ $option_name }}:</label>
-                                        <select name="selected_options[{{ $values->first()->option->id }}][]" class="form-control form-select" multiple>
+                                        <select name="selected_options[{{ $values->first()->option->id }}][]" class="form-control form-select" multiple onchange="printSelectedValues(this)">
                                             <option value="" disabled selected >Select {{ $option_name }}(s)</option>
 
                                             @foreach ($values as $value)
-                                                <option value="{{ $value->id }}" class="nice-select ">{{ $value->optionValue->name }}</option>
-                                            @endforeach
+                                            <option value="{{ $value->optionValue->id }}" class="nice-select">{{ $value->optionValue->name }}</option>
+
+                                             @endforeach
+
                                         </select>
                                         <br>
                                     @endforeach
@@ -111,5 +113,21 @@
     </div>
     <!--================End Single Product Area =================-->
 
+    @push('scripts')
+    <script>
+        function printSelectedValues(selectElement) {
+            // Get the selected option value
+            var selectedValue = selectElement.value;
+
+            // Get the corresponding option and value IDs
+            var optionId = selectElement.name.match(/\[(\d+)\]\[\]/)[1];
+            var valueId = selectedValue;
+
+            // Print the values to the console
+            console.log('Option ID:', optionId);
+            console.log('Value ID:', valueId);
+        }
+    </script>
+    @endpush
 
 </x-front-layout>
