@@ -19,10 +19,18 @@ class CartService
     public function get()
     {
 
-        return Cart::with('product','options')->where('cookie_id',$this->getCookieId())->get();
+        return Cart::with('product')->where('user_id',Auth::id())->get();
     }
 
 /********************************************************************************************/
+    public function getCartCountRawForSpecificUser()
+    {
+
+        return Cart::with('product')->where('user_id',Auth::id())->count();
+    }
+
+/********************************************************************************************/
+
 
 public function add(Request $request)
 {
@@ -58,6 +66,7 @@ public function add(Request $request)
                 'product_id' => $product_id,
                 'quantity' => $quantity,
                 'options' => $options_json,
+                'shipping'=>50,
             ]);
         } else {
             $cart->increment('quantity', $quantity);
@@ -79,11 +88,6 @@ public function add(Request $request)
         $quantity = $request->input('quantity');
         $cart = Cart::find($id);
         $cart->update([ 'quantity'=>$quantity]);
-        // Cart::where('id','=',$id)
-        // ->where('cookie_id','=',$this->getCookieId())
-        // ->update([
-        //     'quantity'=>$quantity,
-        // ]);
     }
 /********************************************************************************************/
 
@@ -94,12 +98,12 @@ public function add(Request $request)
 
 /*********************************************************************************************/
     public function empty(){
-        Cart::where('cookie_id','=',$this->getCookieId())
+        Cart::where('user_id',Auth::id())
         ->delete();
     }
 /*********************************************************************************************/
 public function total() : float{
-    return (float) Cart::where('cookie_id',$this->getCookieId())
+    return (float) Cart::where('user_id',Auth::id())
                  ->join('products','products.id','=','carts.product_id')
                  ->selectRaw('SUM(products.price * carts.quantity) as total')
                  ->value('total');

@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Product extends Model  implements HasMedia
 {
     use HasFactory ,FilterTrait , SoftDeletes,InteractsWithMedia;
-    protected $fillable = ['brand_id','vendor_id','category_id','name','quantity',
+    protected $fillable = ['brand_id','vendor_id','category_id','store_id','name','quantity',
     'slug','description','price','compare_price','status','featured','code'];
 
 

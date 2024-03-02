@@ -130,7 +130,13 @@
                     <div class="checkout_btn_inner float-left">
 
                         <a class="btn_1" href="{{ route('home') }}">Continue Shopping</a>
-                        <a class="btn_1 checkout_btn_1" href="#">Proceed to checkout</a>
+
+                        <a style="" href="{{ route('checkout.index') }}">
+                            <button class="checkout_btn"  @if ($cartCountRaws <= 0) disabled @endif>
+                                Proceed to checkout
+                            </button>
+                        </a>
+                    
 
                     </div>
 
@@ -182,7 +188,6 @@
 
                 $('.quantityInput').on('change', function() {
                     var newQuantity = $(this).val();
-                    // var cartId = $('.quantityInput').data('id');
                     var cartId = $(this).data('id');
 
                     $.ajax({

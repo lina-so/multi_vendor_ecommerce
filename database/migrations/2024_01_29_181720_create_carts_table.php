@@ -22,6 +22,8 @@ return new class extends Migration
             $table->foreignIdFor(Product::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->json('options')->nullable();
             $table->unsignedSmallInteger('quantity')->default(1);
+            $table->float('shipping')->default(0.10); // ضريبة الشحن
+
             $table->timestamps();
         });
     }

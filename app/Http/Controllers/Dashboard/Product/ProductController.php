@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Dashboard\Product;
 
+use App\Models\Store;
 use App\Models\Option;
 use App\Models\Vendor;
 use App\Models\Product;
@@ -47,9 +48,11 @@ class ProductController extends Controller
         $brands = $this->brandService->index($request,$paginate);
         $vendors = Vendor::all();
         $options = Option::all();
+        $stores = Store::all();
 
 
-        return view('dashboard.products.create',compact('product','categories','brands','vendors','options'));
+
+        return view('dashboard.products.create',compact('product','categories','brands','vendors','options','stores'));
     }
 
     /*****************************************************************************************************/

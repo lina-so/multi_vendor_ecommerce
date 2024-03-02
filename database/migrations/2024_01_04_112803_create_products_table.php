@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Brand;
+use App\Models\Store;
 use App\Models\Vendor;
 use App\Models\Category;
 use Illuminate\Support\Facades\Schema;
@@ -19,6 +20,7 @@ return new class extends Migration
             $table->foreignIdFor(Vendor::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignIdFor(Category::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignIdFor(Brand::class)->nullable()->constrained('brands','id')->nullOnDelete();
+            // $table->foreignIdFor(Store::class)->nullable()->constrained('brands','id')->nullOnDelete();
             $table->string('name');
             $table->integer('quantity');
             $table->string('slug')->unique();
@@ -31,7 +33,6 @@ return new class extends Migration
             $table->boolean('featured')->default(0);
             $table->softDeletes();
             $table->timestamps();
-            // $table->json('options')->nullable();
 
         });
     }

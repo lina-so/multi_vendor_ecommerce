@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\Front\Cart\CartController;
+use App\Http\Controllers\Front\Order\CheckoutController;
 use App\Http\Controllers\Dashboard\Product\ProductController;
 
 /*
@@ -28,6 +29,9 @@ Route::get('user/profile',[ProfileController::class,'index'])->middleware(['auth
 Route::resource('cart', CartController::class)->except(['destroy','update']);
 Route::delete('/cart/remove/{id}',  [CartController::class,'destroy'])->name('cart.remove');
 Route::post('/cart/update/{id}',  [CartController::class,'update'])->name('cart.update');
+
+Route::get('checkout',[CheckoutController::class,'index'])->name('checkout.index');
+Route::post('checkout',[CheckoutController::class,'store'])->name('checkout.store');
 
 
 

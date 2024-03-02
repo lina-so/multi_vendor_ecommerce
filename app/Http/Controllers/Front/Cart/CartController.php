@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Front\Cart;
 
+use App\Models\Cart;
 use App\Models\Option;
 use App\Models\OptionValue;
 use Illuminate\Http\Request;
@@ -27,8 +28,11 @@ class CartController extends Controller
         $carts = $this->cartService->get();
         $optionNames = Option::pluck('name', 'id');
         $optionValues = OptionValue::pluck('name', 'id');
+        $cartCountRaws = $this->cartService->getCartCountRawForSpecificUser();
+        // dd($cartCountRaws);
 
-        return view('layouts.front.sections.cart',compact('carts','optionNames','optionValues'));
+
+        return view('layouts.front.sections.cart',compact('carts','optionNames','optionValues','cartCountRaws'));
 
     }
     /*****************************************************************************************************/

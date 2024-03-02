@@ -18,7 +18,8 @@
     <link rel="stylesheet" href="{{ asset('front/css/animate.css') }}">
     <!-- owl carousel CSS -->
     <link rel="stylesheet" href="{{ asset('front/css/owl.carousel.min.css') }}">
-    {{-- <link rel="stylesheet" href="{{ asset('front/lightslider.min.css') }}"> --}}
+
+    {{-- <link rel="stylesheet" href="{{ asset('front/lightslider.min.css') }}"> --}} 
 
     <!-- font awesome CSS -->
     <link rel="stylesheet" href="{{ asset('front/css/all.css') }}">

@@ -30,13 +30,15 @@ class StoreProductRequest extends FormRequest
         'parent_id' => 'required|numeric|exists:categories,id',
         'brand_id' => 'required|numeric|exists:brands,id',
         'vendor_id' => 'required|numeric|exists:vendors,id',
+        'store_id' => 'required|numeric|exists:stores,id',
+
 
         'quantity' => 'required|numeric',
         'description' => 'required|string',
         'price' => 'required|numeric',
         'compare_price' => 'required|numeric',
         'status' => 'required|string|in:active,archived,draft',
-        'featured' => 'required|string|in:0,1',
+        'featured' => 'nullable|string|in:0,1',
         // 'image' => ['required','image','mimes:png,jpg'],
 
 

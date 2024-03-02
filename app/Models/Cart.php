@@ -14,7 +14,7 @@ class Cart extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['cookie_id','user_id','product_id','quantity','options'];
+    protected $fillable = ['cookie_id','user_id','product_id','quantity','options','shipping'];
 
     //Events(observers)
     // creating , created ,updating , updated , saving ,saved ,

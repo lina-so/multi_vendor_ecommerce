@@ -7273,6 +7273,22 @@ h6 {
   align-items: center;
 }
 
+.checkout_btn{
+    display: inline-block;
+    padding: 9px 42px;
+    border-radius: 50px;
+    background-color: #ecfdff;
+    font-size: 15px;
+    font-weight: 700;
+    color: #333;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    border: none;
+}
+.checkout_btn:hover{
+    background-color: #ff3368;
+    color: #fff;
+}
 @media (max-width: 991px) {
   /* line 55, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_contact.scss */
   .form-contact .form-group .btn_1 {
